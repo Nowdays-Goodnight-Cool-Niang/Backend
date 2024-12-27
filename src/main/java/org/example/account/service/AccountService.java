@@ -19,14 +19,14 @@ public class AccountService {
 
     public Account signup(SignupRequestDto signupRequestDto) {
 
-        Optional<Account> optionalAccount = accountRepository.findByLoginId(signupRequestDto.getLoginId());
+        Optional<Account> optionalAccount = accountRepository.findByLoginId(signupRequestDto.loginId());
 
         if (optionalAccount.isPresent()) {
             throw new CustomException(ExceptionStatus.EXIST_LOGIN_ID);
         }
 
-        String encodedPassword = passwordEncoder.encode(signupRequestDto.getPassword());
+        String encodedPassword = passwordEncoder.encode(signupRequestDto.password());
 
-        return accountRepository.save(new Account(signupRequestDto.getLoginId(), encodedPassword));
+        return accountRepository.save(new Account(signupRequestDto.loginId(), encodedPassword));
     }
 }
