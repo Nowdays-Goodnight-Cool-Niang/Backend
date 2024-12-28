@@ -21,7 +21,7 @@ import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 @Configuration
-@EnableWebSecurity(debug = true)
+@EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -59,15 +59,6 @@ public class SecurityConfig {
         return http.build();
     }
 
-//    @Bean
-//    CorsConfigurationSource corsConfigurationSource() {
-//        CorsConfiguration configuration = new CorsConfiguration();
-//        configuration.setAllowedOrigins(List.of("https://todo.com")); // 추후 도메인과 연결하기
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", configuration);
-//        return source;
-//    }
-
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider(PasswordEncoder passwordEncoder,
                                                                UserDetailsService userDetailsService) {
@@ -86,9 +77,7 @@ public class SecurityConfig {
     }
 
     private AuthenticationSuccessHandler authenticationSuccessHandler() {
-        return (request, response, authentication) -> {
-            response.setStatus(HttpServletResponse.SC_OK);
-        };
+        return (request, response, authentication) -> response.setStatus(HttpServletResponse.SC_OK);
     }
 
     private LogoutSuccessHandler logoutSuccessHandler() {
@@ -96,8 +85,6 @@ public class SecurityConfig {
     }
 
     private AuthenticationFailureHandler authenticationFailureHandler() {
-        return (request, response, exception) -> {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        };
+        return (request, response, exception) -> response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
     }
 }
