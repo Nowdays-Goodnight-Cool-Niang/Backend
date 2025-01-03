@@ -24,7 +24,7 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SERVER_PRIVATE_KEY }}
           source: project.jar
-          target: "/backend/new"
+          target: "~/backend/new"
 
       - name: SSH 접속
         uses: appleboy/ssh-action@v1.0.3
@@ -36,8 +36,8 @@ jobs:
           script: |
             sudo rm -rf /backend/current
             sudo mkdir -p /backend/current
-            sudo mv /backend/new/project.jar /backend/current/project.jar
+            sudo mv ~/backend/new/project.jar /backend/current/project.jar
             cd /backend/current
             sudo fuser -k -n tcp 8080 || true
             nohup java -jar project.jar --server.port=8080 --spring.profiles.active=release > ./output.log 2>&1 &
-            sudo rm -rf /backend/new
+            sudo rm -rf ~/backend/new
