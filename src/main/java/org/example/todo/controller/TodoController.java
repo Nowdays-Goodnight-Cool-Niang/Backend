@@ -45,7 +45,7 @@ public class TodoController {
         return ResponseEntity.ok(todoService.updateContent(accountDetail, updateContentTodoRequestDto));
     }
 
-    @PatchMapping("check")
+    @PatchMapping("/check")
     public ResponseEntity<TodoResponseDto> updateCheck(@AuthenticationPrincipal AccountDetail accountDetail,
                                         @RequestBody @Valid UpdateCheckTodoRequestDto updateCheckTodoRequestDto) {
         return ResponseEntity.ok(todoService.updateCheck(accountDetail, updateCheckTodoRequestDto));
