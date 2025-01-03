@@ -24,6 +24,9 @@ public class Todo {
     @Column
     private String content;
 
+    @Column
+    private Boolean isSuccess;
+
     @NotNull
     @ManyToOne
     @JoinColumn(name = "account_id")
@@ -36,5 +39,9 @@ public class Todo {
 
     public void updateContent(String content) {
         this.content = content;
+    }
+
+    public void updateCheck(Boolean check) {
+        this.isSuccess = check;
     }
 }
