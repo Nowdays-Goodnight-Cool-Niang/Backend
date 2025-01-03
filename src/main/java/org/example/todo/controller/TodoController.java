@@ -6,7 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.example.account.domain.AccountDetail;
 import org.example.todo.dto.request.CreateTodoRequestDto;
 import org.example.todo.dto.request.DeleteTodoRequestDto;
-import org.example.todo.dto.request.UpdateTodoRequestDto;
+import org.example.todo.dto.request.UpdateCheckTodoRequestDto;
+import org.example.todo.dto.request.UpdateContentTodoRequestDto;
 import org.example.todo.dto.response.TodoResponseDto;
 import org.example.todo.service.TodoService;
 import org.springframework.http.HttpStatus;
@@ -39,9 +40,15 @@ public class TodoController {
     }
 
     @PatchMapping
-    public ResponseEntity<TodoResponseDto> update(@AuthenticationPrincipal AccountDetail accountDetail,
-                                         @RequestBody @Valid UpdateTodoRequestDto updateTodoRequestDto) {
-        return ResponseEntity.ok(todoService.update(accountDetail, updateTodoRequestDto));
+    public ResponseEntity<TodoResponseDto> updateContent(@AuthenticationPrincipal AccountDetail accountDetail,
+                                         @RequestBody @Valid UpdateContentTodoRequestDto updateContentTodoRequestDto) {
+        return ResponseEntity.ok(todoService.updateContent(accountDetail, updateContentTodoRequestDto));
+    }
+
+    @PatchMapping("check")
+    public ResponseEntity<TodoResponseDto> updateCheck(@AuthenticationPrincipal AccountDetail accountDetail,
+                                        @RequestBody @Valid UpdateCheckTodoRequestDto updateCheckTodoRequestDto) {
+        return ResponseEntity.ok(todoService.updateCheck(accountDetail, updateCheckTodoRequestDto));
     }
 
     @DeleteMapping

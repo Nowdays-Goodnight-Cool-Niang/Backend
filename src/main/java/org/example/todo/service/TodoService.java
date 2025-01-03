@@ -10,7 +10,8 @@ import org.example.exception.ExceptionStatus;
 import org.example.todo.domain.Todo;
 import org.example.todo.dto.request.CreateTodoRequestDto;
 import org.example.todo.dto.request.DeleteTodoRequestDto;
-import org.example.todo.dto.request.UpdateTodoRequestDto;
+import org.example.todo.dto.request.UpdateCheckTodoRequestDto;
+import org.example.todo.dto.request.UpdateContentTodoRequestDto;
 import org.example.todo.dto.response.TodoResponseDto;
 import org.example.todo.repository.TodoRepository;
 import org.springframework.stereotype.Service;
@@ -33,20 +34,32 @@ public class TodoService {
         return todoRepository.findByAccountId(accountDetail.getId()).stream().map(TodoResponseDto::new).toList();
     }
 
-    public TodoResponseDto update(AccountDetail accountDetail, UpdateTodoRequestDto updateTodoRequestDto) {
-        Todo todo = todoRepository.findById(updateTodoRequestDto.id())
+    public TodoResponseDto updateContent(AccountDetail accountDetail, UpdateContentTodoRequestDto updateContentTodoRequestDto) {
+        Todo todo = todoRepository.findById(updateContentTodoRequestDto.taskId())
                 .orElseThrow(() -> new CustomException(ExceptionStatus.NOT_FOUND));
 
         if (!todo.getAccount().getId().equals(accountDetail.getId())) {
             throw new CustomException(ExceptionStatus.NO_PERMISSION);
         }
 
-        todo.updateContent(updateTodoRequestDto.content());
+        todo.updateContent(updateContentTodoRequestDto.content());
+        return new TodoResponseDto(todo);
+    }
+
+    public TodoResponseDto updateCheck(AccountDetail accountDetail, UpdateCheckTodoRequestDto updateCheckTodoRequestDto) {
+        Todo todo = todoRepository.findById(updateCheckTodoRequestDto.taskId())
+            .orElseThrow(() -> new CustomException(ExceptionStatus.NOT_FOUND));
+
+        if (!todo.getAccount().getId().equals(accountDetail.getId())) {
+            throw new CustomException(ExceptionStatus.NO_PERMISSION);
+        }
+
+        todo.updateCheck(updateCheckTodoRequestDto.check());
         return new TodoResponseDto(todo);
     }
 
     public void delete(AccountDetail accountDetail, DeleteTodoRequestDto deleteTodoRequestDto) {
-        Todo todo = todoRepository.findById(deleteTodoRequestDto.id())
+        Todo todo = todoRepository.findById(deleteTodoRequestDto.taskId())
                 .orElseThrow(() -> new CustomException(ExceptionStatus.NOT_FOUND));
 
         if (!todo.getAccount().getId().equals(accountDetail.getId())) {
