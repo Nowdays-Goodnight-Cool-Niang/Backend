@@ -25,7 +25,6 @@ jobs:
           key: ${{ secrets.SERVER_PRIVATE_KEY }}
           source: project.jar
           target: "~/backend/new"
-          strip_components: 1
 
       - name: SSH 접속
         uses: appleboy/ssh-action@v1.0.3
