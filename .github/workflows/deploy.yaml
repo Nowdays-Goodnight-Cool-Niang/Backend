@@ -35,9 +35,9 @@ jobs:
           script_stop: true
           script: |
             sudo rm -rf ~/backend/current
-            sudo mkdir -p ~/backend/current
-            sudo mv ~/backend/new/project.jar ~/backend/current/project.jar
+            mkdir -p ~/backend/current
+            mv ~/backend/new/project.jar ~/backend/current/project.jar
             cd ~/backend/current
             sudo fuser -k -n tcp 8080 || true
-            sudo nohup java -jar project.jar --server.port=8080 > ./output.log 2>&1 &
+            nohup java -jar project.jar --server.port=8080 > ./output.log 2>&1 &
             sudo rm -rf ~/backend/new
