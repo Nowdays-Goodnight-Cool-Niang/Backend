@@ -58,7 +58,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests(authorizeRequests -> {
             authorizeRequests.requestMatchers(HttpMethod.GET)
                     .permitAll();
-            authorizeRequests.requestMatchers(HttpMethod.POST, "/signup", "/login")
+            authorizeRequests.requestMatchers(HttpMethod.POST, "/signup", "/login", "/accounts/{count}")
                     .permitAll();
             authorizeRequests.requestMatchers("/accounts")
                     .authenticated();
