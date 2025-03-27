@@ -41,7 +41,7 @@ public class AccountController {
         return ResponseEntity.ok(new ResponseAccountIdDto(account.getId()));
     }
 
-    @PostMapping("/{count}")
+    @GetMapping("/{count}")
     public ResponseEntity<Set<Account>> inputDummyAccounts(@PathVariable("count") Long count) {
         long totalCount = accountRepository.count();
 
