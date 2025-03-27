@@ -34,9 +34,9 @@ public class SocialDexController {
         return ResponseEntity.ok(socialDexService.getSocialDex(account.getId(), pageable));
     }
 
-    @GetMapping("/{count}")
-    public ResponseEntity<ResponseSocialDexDto> forceUpdateSocialDex(@AuthenticationPrincipal Account account, @PathVariable("count") Long count) {
-        Account targetAccount = accountRepository.findByKakaoOauthId(count)
+    @GetMapping("/{targetAccountId}")
+    public ResponseEntity<ResponseSocialDexDto> forceUpdateSocialDex(@AuthenticationPrincipal Account account, @PathVariable("targetAccountId") Long targetAccountId) {
+        Account targetAccount = accountRepository.findByKakaoOauthId(targetAccountId)
                 .orElseThrow();
 
         ResponseSocialDexDto responseSocialDexDto =
