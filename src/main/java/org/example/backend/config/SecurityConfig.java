@@ -3,10 +3,11 @@ package org.example.backend.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.example.backend.account.entity.Account;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -30,10 +31,10 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
-    @Value("${origin.url}")
-    private String originUrl;
+    private final ObjectMapper objectMapper;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -59,10 +60,12 @@ public class SecurityConfig {
         http.authorizeHttpRequests(authorizeRequests -> {
             authorizeRequests.requestMatchers(HttpMethod.GET)
                     .permitAll();
-            authorizeRequests.requestMatchers(HttpMethod.POST, "/signup", "/login")
+            authorizeRequests.requestMatchers(HttpMethod.POST, "/signup", "/login", "/accounts/{count}")
                     .permitAll();
             authorizeRequests.requestMatchers("/accounts")
                     .authenticated();
+            authorizeRequests.requestMatchers(HttpMethod.GET)
+                    .permitAll();
             authorizeRequests.anyRequest()
                     .hasRole("USER");
         });
@@ -71,6 +74,7 @@ public class SecurityConfig {
     }
 
     @Bean
+    @Profile("docker")
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
@@ -100,7 +104,6 @@ public class SecurityConfig {
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
 
-            ObjectMapper objectMapper = new ObjectMapper();
             Map<String, Object> responseData = accountEntityToLoginResponse(account);
 
             String jsonResponse = objectMapper.writeValueAsString(responseData);

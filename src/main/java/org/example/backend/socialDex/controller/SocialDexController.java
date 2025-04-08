@@ -7,8 +7,10 @@ import org.example.backend.socialDex.dto.request.RequestUpdateSocialDexDto;
 import org.example.backend.socialDex.dto.response.ResponseSocialDexDto;
 import org.example.backend.socialDex.dto.response.ResponseSocialDexInfoDto;
 import org.example.backend.socialDex.service.SocialDexService;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +32,8 @@ public class SocialDexController {
     }
 
     @GetMapping
-    public ResponseEntity<ResponseSocialDexInfoDto> getSocialDex(@AuthenticationPrincipal Account account, Pageable pageable) {
+    @Secured("ROLE_USER")
+    public ResponseEntity<Page<ResponseSocialDexInfoDto.SocialDexInfo>> getSocialDex(@AuthenticationPrincipal Account account, Pageable pageable) {
         return ResponseEntity.ok(socialDexService.getSocialDex(account.getId(), pageable));
     }
 
