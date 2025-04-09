@@ -39,6 +39,12 @@ VALUES (0x4BDE22D531254F01882A866108BF2DA0, 3873563414, '김주호', 'eora21@nav
 
 INSERT INTO `accounts`(`account_id`, `kakao_oauth_id`, `name`, `email`, `team_name`, `position`, `introduction_text`,
                        `created_at`, `updated_at`)
+VALUES (0x4BDE22D531254F01882A866108BF2DA1, 3874198647, '권나연', 'test@test', '쿨냥이', 'FE', '팀원',
+        '2025-04-09 22:25:28',
+        '2025-04-09 22:25:28');
+
+INSERT INTO `accounts`(`account_id`, `kakao_oauth_id`, `name`, `email`, `team_name`, `position`, `introduction_text`,
+                       `created_at`, `updated_at`)
 VALUES (0x4BDE22D531254F01882A866108BF2DB0, 3874233205, '이유진', 'test@test', '쿨냥이', 'FE', '리더', '2025-04-09 22:25:28',
         '2025-04-09 22:25:28');
 
@@ -103,9 +109,13 @@ VALUES (0x4BDE22D531254F01882A866108BF2DC2, 12, '12번 유저', 'test12@test.com
         '2025-04-09 22:25:28');
 
 INSERT INTO `social_dex`(`first_account_id`, `second_account_id`, `created_at`, `updated_at`)
+VALUES (0x4BDE22D531254F01882A866108BF2DA0, 0x4BDE22D531254F01882A866108BF2DA1, '2025-04-09 22:25:28',
+        '2025-04-09 22:25:28');
+
+INSERT INTO `social_dex`(`first_account_id`, `second_account_id`, `created_at`, `updated_at`)
 VALUES (0x4BDE22D531254F01882A866108BF2DA0, 0x4BDE22D531254F01882A866108BF2DB0, '2025-04-09 22:25:28',
         '2025-04-09 22:25:28');
 
 INSERT INTO `social_dex`(`first_account_id`, `second_account_id`, `created_at`, `updated_at`)
-VALUES (0x4BDE22D531254F01882A866108BF2DB0, 0x4BDE22D531254F01882A866108BF2DB1, '2025-04-09 22:25:28',
+VALUES (0x4BDE22D531254F01882A866108BF2DA1, 0x4BDE22D531254F01882A866108BF2DB0, '2025-04-09 22:25:28',
         '2025-04-09 22:25:28');
