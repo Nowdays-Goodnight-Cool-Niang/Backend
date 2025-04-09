@@ -21,6 +21,21 @@ import static org.example.backend.socialDex.entity.QSocialDex.socialDex;
 public class SocialDexRepositoryImpl implements SocialDexRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
+    public Long getRegisterCount(UUID accountId, LocalDateTime snapshotTime) {
+        return queryFactory
+                .select(account.count())
+                .from(account)
+                .join(socialDex)
+                .on(
+                        socialDex.firstAccount.id.eq(account.id).and(socialDex.secondAccount.id.eq(accountId))
+                                .or(
+                                        socialDex.secondAccount.id.eq(account.id).and(socialDex.firstAccount.id.eq(accountId))
+                                )
+                )
+                .where(account.id.ne(accountId), account.createdAt.loe(snapshotTime))
+                .fetchOne();
+    }
+
     public Page<ResponseSocialDexInfoDto.AccountInfo> findDexParticipants(UUID accountId, LocalDateTime snapshotTime, Pageable pageable) {
 
         List<ResponseSocialDexInfoDto.AccountInfo> content = queryFactory
@@ -49,12 +64,12 @@ public class SocialDexRepositoryImpl implements SocialDexRepositoryCustom {
                 )
                 .where(account.id.ne(accountId))
                 .orderBy(
-                        account.createdAt.asc(),
                         new CaseBuilder()
                                 .when(socialDex.id.isNotNull().and(socialDex.createdAt.loe(snapshotTime)))
                                 .then(account.kakaoOauthId)
                                 .otherwise(account.kakaoOauthId.negate())
-                                .desc()
+                                .desc(),
+                        account.createdAt.asc()
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -63,13 +78,6 @@ public class SocialDexRepositoryImpl implements SocialDexRepositoryCustom {
         JPAQuery<Long> countQuery = queryFactory
                 .select(account.count())
                 .from(account)
-                .leftJoin(socialDex)
-                .on(
-                        socialDex.firstAccount.id.eq(account.id).and(socialDex.secondAccount.id.eq(accountId))
-                                .or(
-                                        socialDex.secondAccount.id.eq(account.id).and(socialDex.firstAccount.id.eq(accountId))
-                                )
-                )
                 .where(account.id.ne(accountId));
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
