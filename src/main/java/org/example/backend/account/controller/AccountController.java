@@ -7,7 +7,6 @@ import org.example.backend.account.dto.request.RequestUpdateInfoDto;
 import org.example.backend.account.dto.response.ResponseAccountIdDto;
 import org.example.backend.account.dto.response.ResponseAccountInfo;
 import org.example.backend.account.entity.Account;
-import org.example.backend.account.repository.AccountRepository;
 import org.example.backend.account.service.AccountService;
 import org.springframework.http.*;
 import org.springframework.security.core.Authentication;
@@ -21,10 +20,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.LongStream;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/accounts")
@@ -32,7 +27,6 @@ public class AccountController {
 
     private final AccountService accountService;
     private final OAuth2AuthorizedClientService authorizedClientService;
-    private final AccountRepository accountRepository;
 
     @PatchMapping
     public ResponseEntity<Void> updateAccountInfo(@AuthenticationPrincipal Account account,
@@ -71,19 +65,6 @@ public class AccountController {
         return ResponseEntity.noContent()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
                 .build();
-    }
-
-    @GetMapping("/{count}")
-    public ResponseEntity<Set<Account>> inputDummyAccounts(@PathVariable("count") Long count) {
-        long totalCount = accountRepository.count();
-
-        Set<Account> collect = LongStream.range(totalCount + 1, totalCount + count + 1)
-                .mapToObj(value -> new Account(value, value + "번 유저"))
-                .collect(Collectors.toSet());
-
-        accountRepository.saveAll(collect);
-
-        return ResponseEntity.ok(collect);
     }
 
     private void disconnectOauth() {
