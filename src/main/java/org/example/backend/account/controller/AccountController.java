@@ -3,12 +3,16 @@ package org.example.backend.account.controller;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.example.backend.account.dto.request.RequestDeleteDto;
 import org.example.backend.account.dto.request.RequestUpdateInfoDto;
-import org.example.backend.account.dto.response.ResponseAccountIdDto;
 import org.example.backend.account.dto.response.ResponseAccountInfo;
 import org.example.backend.account.entity.Account;
 import org.example.backend.account.service.AccountService;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,7 +21,12 @@ import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 @RestController
@@ -43,14 +52,11 @@ public class AccountController {
         return ResponseEntity.ok(new ResponseAccountInfo(account));
     }
 
-    @GetMapping("my-id")
-    public ResponseEntity<ResponseAccountIdDto> getMyId(@AuthenticationPrincipal Account account) {
-        return ResponseEntity.ok(new ResponseAccountIdDto(account.getId()));
-    }
-
     @DeleteMapping
-    public ResponseEntity<Void> delete(@AuthenticationPrincipal Account account, HttpSession session) {
+    public ResponseEntity<Void> delete(@AuthenticationPrincipal Account account,
+                                       @RequestBody RequestDeleteDto requestDeleteDto, HttpSession session) {
         accountService.delete(account);
+        accountService.saveFeedback(requestDeleteDto.feedback());
 
         session.invalidate();
 
